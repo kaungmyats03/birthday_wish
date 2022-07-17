@@ -20,17 +20,17 @@ class Partner(models.Model):
             template.send_mail(bd_person.id, force_send=True)
 
             # Without Using Mail Template
-            subject = "Happy Birthday " + bd_person.name
-            body = """Hoping that this birthday is the start of an amazing year where you accomplish every goal and shatter every record there is to break.
-                      Enjoy your birthday!"""
-            vals = {
-                'subject': subject,
-                'body_html': body,
-                'email_to': str(bd_person.email),
-                'auto_delete': False,
-                'email_from': bd_person.user_id.email_formatted or user_id.email_formatted, # or any mail you like
-            }
+#             subject = "Happy Birthday " + bd_person.name
+#             body = """Hoping that this birthday is the start of an amazing year where you accomplish every goal and shatter every record there is to break.
+#                       Enjoy your birthday!"""
+#             vals = {
+#                 'subject': subject,
+#                 'body_html': body,
+#                 'email_to': str(bd_person.email),
+#                 'auto_delete': False,
+#                 'email_from': bd_person.user_id.email_formatted or user_id.email_formatted, # or any mail you like
+#             }
 
-            mail_id = self.env['mail.mail'].sudo().create(vals)
-            mail_id.sudo().send()
+#             mail_id = self.env['mail.mail'].sudo().create(vals)
+#             mail_id.sudo().send()
         return
