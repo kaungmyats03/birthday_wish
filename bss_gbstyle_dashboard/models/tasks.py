@@ -9,6 +9,7 @@ STATE_LIST = [
         ('review','Review'), 
         ('done', 'Done'), 
         ('cancel', 'Cancelled')
+        ('reject', 'Reject')
     ]
 STATE_COLOR = [
     ('assign', '현재 할당된 업무', 'black'),
