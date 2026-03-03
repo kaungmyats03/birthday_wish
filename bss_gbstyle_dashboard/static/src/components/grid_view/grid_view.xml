@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bss_gbstyle_dashboard.GridViewComponent">
+        <ScrollableComponent>
+            <t t-set-slot="title"></t>
+            <div class="dashboard-grid-container">
+                <div class="dashboard-grid-row">
+                    <div class="dashboard-grid-card-wrapper" t-foreach="state.taskStates" t-as="task_state" t-key="task_state[0]">
+                        <t t-set="tasks" t-value="getTasksPerState(task_state[0])"/>
+                        <div class="dashboard-task-card">
+                            <div class="dashboard-task-card-header">
+                                <h2 class="dashboard-task-card-title" t-att-style="'color: '+task_state[2]">
+                                    <a href="#" 
+                                       t-on-click="() => this.showTaskList(task_state[1], tasks.all_tasks)" 
+                                       t-att-style="'color: '+task_state[2]"
+                                       class="dashboard-task-card-link">
+                                        <t t-esc="task_state[1]"/>
+                                        <span class="dashboard-task-count-badge" t-att-style="'background-color: '+task_state[2]+'20; color: '+task_state[2]">
+                                            <t t-esc="tasks.total_count"/>
+                                        </span>
+                                    </a>
+                                </h2>
+                            </div>
+                            <div class="dashboard-task-card-body">
+                                <TaskGridDetail tasks="tasks.list"/>
+                            </div>
+                            <div class="dashboard-task-card-footer">
+                                <a t-if="tasks.count>0" 
+                                   href="#" 
+                                   t-on-click="() => this.onClickViewMore(task_state[0])"
+                                   class="dashboard-view-more-link">
+                                    <i class="oi oi-chevron-down"/> <t t-esc="tasks.count"/> More
+                                </a>
+                                <a t-if="tasks.count==-1" 
+                                   href="#" 
+                                   t-on-click="() => this.onClickViewLess(task_state[0])"
+                                   class="dashboard-view-more-link">
+                                    <i class="oi oi-chevron-up"/> Less
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ScrollableComponent>
+    </t>
+</templates>

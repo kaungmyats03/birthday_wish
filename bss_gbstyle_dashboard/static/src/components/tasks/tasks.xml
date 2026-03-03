@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bss_gbstyle_dashboard.Tasks">
+        <div class="dashboard-container">
+            <!-- Search and View Toggle Bar -->
+            <div class="dashboard-header">
+                <div class="dashboard-search-section">
+                    <div class="search-wrapper">
+                        <input t-ref="name" 
+                               type="text" 
+                               class="form-control dashboard-search-input" 
+                               placeholder="Search tasks..."
+                               t-on-keyup="(e)=>this.searchTasks(e)"/>
+                        <button class="btn dashboard-search-btn" t-on-click="searchTasks">
+                            <i class="oi oi-search"/>
+                        </button>
+                    </div>
+                </div>
+                <div class="dashboard-view-toggle">
+                    <button t-attf-class="dashboard-view-btn #{state.view ==='grid'?'active':''}"
+                            t-on-click="switchView"
+                            title="Grid View">
+                        <i class="oi oi-view-kanban"/>
+                    </button>
+                    <button t-attf-class="dashboard-view-btn #{state.view ==='list'?'active':''}"
+                            t-on-click="switchView"
+                            title="List View">
+                        <i class="oi oi-view-list"/>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 📊 Charts Section -->
+            <t t-if="state.view === 'grid'">
+                <div class="dashboard-charts-section">
+                    <!-- Left Panel: Filters -->
+                    <div class="dashboard-filters-panel">
+                        <div class="dashboard-filters-card">
+                            <div class="dashboard-filters-title">
+                                <span class="dashboard-title-main">TASK</span>
+                                <span class="dashboard-title-sub">대시보드</span>
+                            </div>
+                            
+                            <!-- FROM section -->
+                            <div class="dashboard-filter-group">
+                                <div class="dashboard-filter-label">
+                                    <strong><t t-esc="getFromLabel()"/></strong>
+                                </div>
+                                <select
+                                    class="form-control dashboard-select"
+                                    t-model="state.selectedFromYear"
+                                    t-on-change="filterByYearAndMonth">
+                                    <option t-att-value="''">연도 (Year)</option>
+                                    <t t-foreach="state.years" t-as="year" t-key="year">
+                                        <option t-att-value="year">
+                                            <t t-esc="year"/>
+                                        </option>
+                                    </t>
+                                </select>
+                                <div class="dashboard-filter-label-small">월 (Month)</div>
+                                <select
+                                    class="form-control dashboard-select"
+                                    t-model="state.selectedFromMonth"
+                                    t-on-change="filterByYearAndMonth">
+                                    <option t-att-value="''">선택 (Select)</option>
+                                    <t t-foreach="state.months" t-as="month" t-key="month.key">
+                                        <option t-att-value="month.key">
+                                            <t t-esc="month.key"/> 월 (<t t-esc="month.name.slice(0,3)"/>)
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            
+                            <!-- TO section -->
+                            <div class="dashboard-filter-group">
+                                <div class="dashboard-filter-label">
+                                    <strong><t t-esc="getToLabel()"/></strong>
+                                </div>
+                                <select
+                                    class="form-control dashboard-select"
+                                    t-model="state.selectedToYear"
+                                    t-on-change="filterByYearAndMonth">
+                                    <option t-att-value="''">연도 (Year)</option>
+                                    <t t-foreach="state.years" t-as="year" t-key="year">
+                                        <option t-att-value="year">
+                                            <t t-esc="year"/>
+                                        </option>
+                                    </t>
+                                </select>
+                                <div class="dashboard-filter-label-small">월 (Month)</div>
+                                <select
+                                    class="form-control dashboard-select"
+                                    t-model="state.selectedToMonth"
+                                    t-on-change="filterByYearAndMonth">
+                                    <option t-att-value="''">선택 (Select)</option>
+                                    <t t-foreach="state.months" t-as="month" t-key="'to-' + month.key">
+                                        <option t-att-value="month.key">
+                                            <t t-esc="month.key"/> 월 (<t t-esc="month.name.slice(0,3)"/>)
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task Status Counts -->
+                    <div class="dashboard-status-panel">
+                        <div class="dashboard-status-card">
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-all"></span>
+                                <span class="dashboard-status-label">전체 태스크 <b>(All)</b></span>
+                                <span class="dashboard-status-count"><t t-esc="state.tasks.length || 0"/></span>
+                            </div>
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-new"></span>
+                                <span class="dashboard-status-label">신규 <b>(New)</b></span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.task_state === 'draft').length"/>
+                                </span>
+                            </div>
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-assign"></span>
+                                <span class="dashboard-status-label">할당됨 <b>(Assigned)</b></span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.task_state === 'assign').length"/>
+                                </span>
+                            </div>
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-inprocess"></span>
+                                <span class="dashboard-status-label">진행중 <b>(In Progress)</b></span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.task_state === 'in_progress').length"/>
+                                </span>
+                            </div>
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-review"></span>
+                                <span class="dashboard-status-label">검토 <b>(Review)</b></span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.task_state === 'review').length"/>
+                                </span>
+                            </div>
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-done"></span>
+                                <span class="dashboard-status-label">완료 태스크 <b>(Done)</b></span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.task_state === 'done').length"/>
+                                </span>
+                            </div>
+                            <div class="dashboard-status-divider"></div>
+                            <!-- <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-ontime"></span>
+                                <span class="dashboard-status-label">Due Soon</span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.date_color === '#b36f10').length"/>
+                                </span>
+                            </div> -->
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-alldone"></span>
+                                <span class="dashboard-status-label">All Done</span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.task_state == 'done').length"/>
+                                </span>
+                            </div>
+                            <div class="dashboard-status-item">
+                                <span class="dashboard-status-indicator dashboard-indicator-overdue"></span>
+                                <span class="dashboard-status-label">OverDue</span>
+                                <span class="dashboard-status-count">
+                                    <t t-esc="state.tasks.filter(t => t.date_color === 'red').length"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="dashboard-charts-container">
+                        <div class="dashboard-chart-card">
+                            <h5 class="dashboard-chart-title">Task Overview</h5>
+                            <div class="dashboard-chart-wrapper">
+                                <!-- <canvas id="task_bar_chart"></canvas> -->
+                                <canvas t-ref="task_bar_chart"/>
+                            </div>
+                        </div>
+                        <div class="dashboard-chart-card">
+                            <h5 class="dashboard-chart-title">Task Trends</h5>
+                            <div class="dashboard-chart-wrapper">
+                                <!-- <canvas id="task_line_chart"></canvas> -->
+                                <canvas t-ref="task_line_chart"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- 🧾 Task List/Grid Section -->
+            <TaskList tasks="state.tasks" t-if="state.view === 'list'"/>
+            <GridViewComponent tasks="state.tasks" t-else="" />
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bss_gbstyle_dashboard.TaskList">
+        <ScrollableComponent>
+            <t t-if="!props.tasks || props.tasks.length === 0">
+                <div class="text-center text-muted p-4">
+                    <i class="fa fa-list-ul fa-2x mb-2"></i>
+                    <p>No tasks found. Try adjusting your search criteria.</p>
+                </div>
+            </t>
+            <t t-else="">
+                <table class="table">
+                    <thead class="sticky-top text-black" style="background-color:#e6e6e9;">
+                        <tr>
+                            <th scope="col" class="number_column">#</th>
+                            <th scope="col" class="task_name_column">Name</th>
+                            <th scope="col" class="season_name_column">Season</th>
+                            <th scope="col" class="project_name_column">Project</th>
+                            <th scope="col" class="assignee_column">Assignee</th>
+                            <th scope="col" class="deadline_column">Deadline</th>
+                            <th scope="col" class="urgency_column">Priority</th>
+                            <th scope="col" class="status_column">State</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="props.tasks" t-as="task" t-key="task.id">
+                            <tr t-on-click="() => this.showTaskForm(task.id)" style="cursor: pointer;">
+                                <th scope="row"><span t-esc="task_index+1"/></th>
+                                <td class="task_name_column">
+                                    <t t-if="task.name">
+                                        <span t-esc="task.name"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span>-</span>
+                                    </t>
+                                </td>
+                                <td class="season_name_column">
+                                    <t t-if="task.planning_id">
+                                        <span t-esc="task.planning_id"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span>-</span>
+                                    </t>
+                                </td>
+                                <td class="project_name_column">
+                                    <t t-if="task.project_id">
+                                        <span t-esc="task.project_id"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span>-</span>
+                                    </t>
+                                </td>
+                                <td class="assignee_column">
+                                    <div class="assignee-container">
+                                        <t t-if="task.assignee_ids">
+                                            <t t-foreach="task.assignee_ids" t-as="assignee" t-key="assignee_index">
+                                                <div class="assignee-item" t-att-style="'background-color: ' + getAssigneeColor(assignee[0])">
+                                                    <t t-esc="assignee[1]"/>
+                                                </div>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <span>-</span>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td class="deadline_column">
+                                    <t t-if="task.date_deadline">
+                                        <span t-esc="task.date_deadline"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span>-</span>
+                                    </t>
+                                </td>
+                                <td class="urgency_column">
+                                    <t t-if="task.urgent_request">
+                                        <t t-if="task.urgent_request == true">
+                                            <!-- <i class="fa fa-exclamation-circle text-danger" title="Urgent"></i> -->
+                                            <span>Urgent</span>
+                                        </t>
+                                        <t t-else="">
+                                            -
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        -
+                                    </t>
+                                </td>
+                                <td class="status_column">
+                                    <t t-if="task.state_str">
+                                        <span t-esc="task.state_str"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span>-</span>
+                                    </t>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </t>
+        </ScrollableComponent>
+    </t>
+</templates>

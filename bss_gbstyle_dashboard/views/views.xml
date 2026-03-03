@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_task" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">bss_gbstyle_dashboard.task</field>
+    </record>
+
+    <menuitem
+        id="menu_dashboard"
+        name="Dashboard"
+        parent="project.menu_main_pm"
+        action="action_task"
+        sequence="-2"
+    />
+
+    <record id="action_task_admin" model="ir.actions.client">
+        <field name="name">Admin Dashboard</field>
+        <field name="tag">bss_gbstyle_dashboard.task_admin</field>
+    </record>
+
+    <menuitem
+        id="menu_admin_dashboard"
+        name="Admin Dashboard"
+        parent="project.menu_main_pm"
+        action="action_task_admin"
+        sequence="-1"
+        groups="base.group_system"
+    />
+
+</odoo>

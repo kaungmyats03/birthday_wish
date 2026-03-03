@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bss_gbstyle_dashboard.TaskGridDetail">
+      <div class="dashboard-task-detail-container">
+        <t t-if="!props.tasks || props.tasks.length === 0">
+          <div class="dashboard-empty-state">
+            <i class="fa fa-tasks dashboard-empty-icon"></i>
+            <p class="dashboard-empty-text">No tasks found in this category.</p>
+          </div>
+        </t>
+        <t t-else="">
+          <t t-foreach="props.tasks" t-as="task" t-key="task.id">
+            <div class="dashboard-task-item">
+              <div class="dashboard-task-item-header">
+                <div class="dashboard-task-name-section">
+                  <a href="#" 
+                     t-on-click="() => this.showTaskForm(task.id)"
+                     class="dashboard-task-name-link">
+                    <i class="fa fa-star dashboard-task-star"></i>
+                    <span class="dashboard-task-name"><t t-esc="task.name"/></span>
+                  </a>
+                </div>
+                <div class="dashboard-task-meta-section">
+                  <t t-if="task.date_deadline">
+                    <div class="dashboard-task-due-date" t-att-style="'color:'+task.date_color">
+                      <i class="oi oi-calendar dashboard-task-icon"></i>
+                      <span>Due: <t t-esc="task.date_deadline ? task.date_deadline.slice(0, 10) : ''"/></span>
+                    </div>
+                  </t>
+                  <div class="dashboard-task-status" t-att-style="'background-color:'+task.text_color">
+                    <t t-esc="task.state_str"/>
+                  </div>
+                </div>
+              </div>
+              <div class="dashboard-task-item-footer">
+                <div class="dashboard-task-info">
+                  <t t-if="task.planning_id">
+                    <div class="dashboard-task-planning">
+                      <i class="oi oi-project dashboard-task-icon-small"></i>
+                      <span class="dashboard-task-planning-text"><t t-esc="task.planning_id"/></span>
+                    </div>
+                  </t>
+                </div>
+                <!-- <div class="dashboard-task-attributes">
+                  <span class="dashboard-task-attr-item">원단: 10</span>
+                  <span class="dashboard-task-attr-separator">|</span>
+                  <span class="dashboard-task-attr-item">품목: 10</span>
+                </div> -->
+              </div>
+            </div>
+          </t>
+        </t>
+      </div>
+    </t>
+</templates>

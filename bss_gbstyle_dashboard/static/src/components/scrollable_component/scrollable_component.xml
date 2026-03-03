@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bss_gbstyle_dashboard.ScrollableComponent">
+        <t t-slot="title"/>
+<!--        class="bg-white"-->
+        <div t-att-class="props.class"  style="max-height: 85vh; overflow-y: auto;">
+            <t t-slot="default"/>
+        </div>
+    </t>
+</templates>
